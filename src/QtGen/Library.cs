@@ -41,11 +41,12 @@ public class Library(string QtPath, string OutPath) : ILibrary
         module.IncludeDirs.Add(Path.Combine(QtPath, "include"));
         module.IncludeDirs.Add(Path.Combine(QtPath, "include", moduleName));
 
+        //module.Headers.Add(moduleName);
+
         if (moduleName == "QtCore")
         {
             module.Headers.Add("qobject.h");
             module.Headers.Add("qcoreapplication.h");
-            //module.Headers.Add(moduleName);
         }
 
         module.Libraries.Add(libName);
@@ -54,6 +55,9 @@ public class Library(string QtPath, string OutPath) : ILibrary
     public void SetupPasses(Driver driver)
     {
         driver.Context.TranslationUnitPasses.AddPass(new UseWhitelistPass());
+
+        driver.Context.TranslationUnitPasses.AddPass(new RemoveCharPass());
+        driver.Context.TranslationUnitPasses.AddPass(new RemapQStringMethodsPass());
     }
 
     public void Preprocess(Driver driver, ASTContext ctx) { }
