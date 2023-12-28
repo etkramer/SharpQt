@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="CppSharp.Runtime">
-      <HintPath>..\src\QtGen\bin\x64\Debug\net8.0\runtimes\win-x64\lib\net6.0\CppSharp.Runtime.dll</HintPath>
-    </Reference>
-      
     <Reference Include="Qt">
       <HintPath>..\bin\Qt.dll</HintPath>
     </Reference>
+  </ItemGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="CppSharp.Runtime" Version="1.1.5.3168" />
   </ItemGroup>
 
 </Project>
