@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QtGen", "src\QtGen\QtGen.csproj", "{E8D72A2D-04B9-4DDD-AEA7-D3A7BEFBB214}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpQt", "src\SharpQt\SharpQt.csproj", "{E8D72A2D-04B9-4DDD-AEA7-D3A7BEFBB214}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "sample\Sample.csproj", "{B8E535A5-2B44-4626-AB5C-5958ED5A4713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpQt.Sample", "sample\SharpQt.Sample.csproj", "{B8E535A5-2B44-4626-AB5C-5958ED5A4713}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

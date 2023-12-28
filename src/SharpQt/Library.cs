@@ -1,9 +1,9 @@
 ﻿using CppSharp;
 using CppSharp.AST;
 using CppSharp.Generators;
-using QtGen.Passes;
+using SharpQt.Passes;
 
-namespace QtGen;
+namespace SharpQt;
 
 public class Library(string QtPath, string OutPath) : ILibrary
 {

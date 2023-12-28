@@ -2,7 +2,7 @@
 using CppSharp.AST.Extensions;
 using CppSharp.Passes;
 
-namespace QtGen.Passes;
+namespace SharpQt.Passes;
 
 /// <summary>
 /// Ignores any function containing the native "char" type. Qt has QChar overloads everywhere, which we should use instead to support the same range as C# chars.

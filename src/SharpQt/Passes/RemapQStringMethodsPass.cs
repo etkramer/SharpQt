@@ -2,7 +2,7 @@
 using CppSharp.AST.Extensions;
 using CppSharp.Passes;
 
-namespace QtGen.Passes;
+namespace SharpQt.Passes;
 
 class RemapQStringMethodsPass : TranslationUnitPass
 {

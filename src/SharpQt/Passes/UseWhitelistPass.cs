@@ -3,7 +3,7 @@ using CppSharp.AST.Extensions;
 using CppSharp.Extensions;
 using CppSharp.Passes;
 
-namespace QtGen.Passes;
+namespace SharpQt.Passes;
 
 class UseWhitelistPass : TranslationUnitPass
 {

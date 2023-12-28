@@ -3,7 +3,7 @@ using System.Reflection;
 using CppSharp;
 using Spectre.Console;
 
-namespace QtGen;
+namespace SharpQt;
 
 static class Program
 {
@@ -18,7 +18,7 @@ static class Program
         try
         {
             // Print title figlet.
-            AnsiConsole.Write(new FigletText("QtGen").Color(Color.Red));
+            AnsiConsole.Write(new FigletText("SharpQt").Color(Color.Red));
 
             PrintLabel("Configure");
             {
@@ -50,7 +50,7 @@ static class Program
                 {
                     using var resStream = Assembly
                         .GetExecutingAssembly()
-                        .GetManifestResourceStream("QtGen.Build.Qt.csproj");
+                        .GetManifestResourceStream("SharpQt.Build.Qt.csproj");
 
                     // Write project files to build folder
                     resStream!.CopyTo(fileStream);

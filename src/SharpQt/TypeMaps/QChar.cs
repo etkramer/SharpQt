@@ -3,7 +3,7 @@ using CppSharp.Generators.CSharp;
 using CppSharp.Types;
 using Type = CppSharp.AST.Type;
 
-namespace QtGen.TypeMaps;
+namespace SharpQt.TypeMaps;
 
 [TypeMap("QChar")]
 class QChar : TypeMap

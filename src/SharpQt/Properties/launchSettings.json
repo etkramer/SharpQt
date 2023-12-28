@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "QtGen": {
+    "SharpQt": {
       "commandName": "Project",
       "workingDirectory": "$(SolutionDir)"
     }

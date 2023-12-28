@@ -10,9 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Build\Qt.csproj">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Build\Qt.csproj"/>
   </ItemGroup>
 
   <ItemGroup>

@@ -4,7 +4,7 @@ using CppSharp.Generators.CSharp;
 using CppSharp.Types;
 using Type = CppSharp.AST.Type;
 
-namespace QtGen.TypeMaps;
+namespace SharpQt.TypeMaps;
 
 [TypeMap("QString")]
 class QString : TypeMap
