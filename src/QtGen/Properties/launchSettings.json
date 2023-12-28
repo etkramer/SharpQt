@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "QtGen": {
+      "commandName": "Project",
+      "workingDirectory": "$(SolutionDir)"
+    }
+  }
+}

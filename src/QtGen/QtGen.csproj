@@ -6,14 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CppSharp" Version="1.1.5.3168" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Passes\" />
   </ItemGroup>
 
 </Project>

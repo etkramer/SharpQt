@@ -5,7 +5,7 @@ using QtGen.Passes;
 
 namespace QtGen;
 
-public class Library(string QtPath) : ILibrary
+public class Library(string QtPath, string OutPath) : ILibrary
 {
     public void Setup(Driver driver)
     {
@@ -15,6 +15,7 @@ public class Library(string QtPath) : ILibrary
         driver.Options.GeneratorKind = GeneratorKind.CSharp;
         driver.Options.MarshalCharAsManagedChar = false;
         driver.Options.MarshalConstCharArrayAsString = false;
+        driver.Options.OutputDir = OutPath;
 
         driver.ParserOptions.AddDefines("QT_NO_OPENGL");
 
