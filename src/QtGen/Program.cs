@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Text;
+using System.Reflection;
 using CppSharp;
 using Spectre.Console;
 
@@ -9,35 +9,62 @@ static class Program
 {
     static void Main()
     {
-        if (!File.Exists("QtGen.sln"))
+        string qtDir = @"F:\Qt\5.15.2\msvc2019_64";
+        string buildDir = Path.Combine(Directory.GetCurrentDirectory(), "build");
+        string outDir = Path.Combine(Directory.GetCurrentDirectory(), "bin");
+
+        var watch = Stopwatch.StartNew();
+
+        try
         {
-            throw new Exception("Generator must be run from solution directory");
+            // Print title figlet.
+            AnsiConsole.Write(new FigletText("QtGen").Color(Color.Red));
+
+            PrintLabel("Configure");
+            {
+                qtDir = AnsiConsole.Ask("Path to Qt5:", qtDir);
+                buildDir = AnsiConsole.Ask("Path for build files:", buildDir);
+                outDir = AnsiConsole.Ask("Path for output files:", outDir);
+
+                // No-op if dir already exists
+                Directory.CreateDirectory(buildDir);
+                Directory.CreateDirectory(outDir);
+
+                // Clear existing files from build folder
+                foreach (var file in Directory.GetFiles(buildDir, "", SearchOption.AllDirectories))
+                {
+                    File.Delete(file);
+                }
+            }
+
+            // Run generator driver
+            PrintLabel("Generate");
+            {
+                ConsoleDriver.Run(new Library(qtDir, buildDir));
+            }
+
+            // Build C# project
+            PrintLabel("Compile (C#)");
+            {
+                using (var fileStream = File.Create(Path.Combine(buildDir, "Qt.csproj"), 0))
+                {
+                    using var resStream = Assembly
+                        .GetExecutingAssembly()
+                        .GetManifestResourceStream("QtGen.Build.Qt.csproj");
+
+                    // Write project files to build folder
+                    resStream!.CopyTo(fileStream);
+                }
+
+                RunProcess("dotnet", $"build -o \"{outDir}\"", buildDir);
+            }
+
+            AnsiConsole.MarkupLine($"[green]Done in {watch.Elapsed.ToString(@"mm\:ss")}![/]");
         }
-
-        // Print title figlet.
-        AnsiConsole.Write(new FigletText("QtGen").Color(Color.Red));
-
-        // Clear existing files from build folder
-        foreach (var file in Directory.GetFiles("build", "", SearchOption.AllDirectories))
+        catch (Exception e)
         {
-            File.Delete(file);
+            AnsiConsole.WriteException(e, ExceptionFormats.ShortenEverything);
         }
-
-        // Run generator driver
-        PrintLabel("Generate");
-        ConsoleDriver.Run(
-            new Library(
-                @"F:\Qt\5.15.2\msvc2019_64",
-                Path.Combine(Directory.GetCurrentDirectory(), "build")
-            )
-        );
-
-        // Copy project files to build folder
-        File.Copy("src/QtGen/Build/Qt.csproj", "build/Qt.csproj", true);
-
-        // Build C# project
-        PrintLabel("Compile (C#)");
-        RunProcess("dotnet", "build", Path.Combine(Directory.GetCurrentDirectory(), "build"));
     }
 
     static void PrintLabel(string text)
@@ -47,7 +74,7 @@ static class Program
 
     static void RunProcess(string name, string args, string? workingDirectory = null)
     {
-        var process = new Process()
+        using var process = new Process()
         {
             StartInfo = new()
             {
@@ -62,5 +89,10 @@ static class Program
         process.Start();
         AnsiConsole.WriteLine(process.StandardOutput.ReadToEnd());
         process.WaitForExit();
+
+        if (process.ExitCode != 0)
+        {
+            throw new Exception($"Process '{name} {args}' exited with code {process.ExitCode}.");
+        }
     }
 }

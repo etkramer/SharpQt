@@ -8,7 +8,7 @@ namespace QtGen.Passes;
 class UseWhitelistPass : TranslationUnitPass
 {
     readonly HashSet<string> whitelist = ["QObject"];
-    readonly HashSet<string> whitelistInternal = []; // TODO: Mark these internal instead of including them in the API.
+    readonly HashSet<string> whitelistInternal = ["QScopedPointer"]; // TODO: Mark these internal instead of including them in the API.
 
     public override bool VisitClassDecl(Class decl)
     {
