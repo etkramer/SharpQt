@@ -40,7 +40,7 @@ static class Program
             // Run generator driver
             PrintLabel("Generate");
             {
-                ConsoleDriver.Run(new Library(qtDir, buildDir));
+                ConsoleDriver.Run(new Library(qtDir, buildDir, ["QtCore", "QtGui"]));
             }
 
             // Build C# project
@@ -50,7 +50,7 @@ static class Program
                 {
                     using var resStream = Assembly
                         .GetExecutingAssembly()
-                        .GetManifestResourceStream("SharpQt.Build.Qt.csproj");
+                        .GetManifestResourceStream("SharpQt.Embed.Qt.csproj");
 
                     // Write project files to build folder
                     resStream!.CopyTo(fileStream);

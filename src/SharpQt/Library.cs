@@ -5,7 +5,7 @@ using SharpQt.Passes;
 
 namespace SharpQt;
 
-public class Library(string QtPath, string OutPath) : ILibrary
+public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNames) : ILibrary
 {
     public void Setup(Driver driver)
     {
@@ -16,8 +16,6 @@ public class Library(string QtPath, string OutPath) : ILibrary
         driver.Options.MarshalCharAsManagedChar = false;
         driver.Options.MarshalConstCharArrayAsString = false;
         driver.Options.OutputDir = OutPath;
-
-        driver.ParserOptions.AddDefines("QT_NO_OPENGL");
 
 #if DEBUG
         driver.Options.GenerateDebugOutput = true;
@@ -30,7 +28,14 @@ public class Library(string QtPath, string OutPath) : ILibrary
         driver.ParserOptions.SkipFunctionBodies = true;
         driver.ParserOptions.SkipPrivateDeclarations = true;
 
-        AddModule(driver, "QtCore", "Qt5Core", "Qt");
+        foreach (var moduleName in ModuleNames)
+        {
+            var shortName = moduleName.Split("Qt")[1];
+            var libName = $"Qt5{shortName}";
+            var namespaceName = shortName == "Core" ? "Qt" : $"Qt.{shortName}";
+
+            AddModule(driver, moduleName, libName, namespaceName);
+        }
     }
 
     void AddModule(Driver driver, string moduleName, string libName, string namespaceName)
@@ -41,26 +46,57 @@ public class Library(string QtPath, string OutPath) : ILibrary
         module.IncludeDirs.Add(Path.Combine(QtPath, "include"));
         module.IncludeDirs.Add(Path.Combine(QtPath, "include", moduleName));
 
-        //module.Headers.Add(moduleName);
-
-        if (moduleName == "QtCore")
-        {
-            module.Headers.Add("qobject.h");
-            module.Headers.Add("qcoreapplication.h");
-        }
-
+        module.Headers.Add(moduleName);
         module.Libraries.Add(libName);
+
+        //module.Headers.Add("qobject.h");
+        //module.Headers.Add("qcoreapplication.h");
     }
 
     public void SetupPasses(Driver driver)
     {
         driver.Context.TranslationUnitPasses.AddPass(new UseWhitelistPass());
-
-        driver.Context.TranslationUnitPasses.AddPass(new RemoveCharPass());
         driver.Context.TranslationUnitPasses.AddPass(new RemapQStringMethodsPass());
+        driver.Context.TranslationUnitPasses.AddPass(new RemoveCharPass());
+        driver.Context.TranslationUnitPasses.AddPass(new RemoveQObjectMembersPass());
     }
 
-    public void Preprocess(Driver driver, ASTContext ctx) { }
+    public void Preprocess(Driver driver, ASTContext ctx)
+    {
+        foreach (var unit in ctx.TranslationUnits.Where(u => u.IsValid))
+        {
+            IgnorePrivateDecls(unit);
+        }
+    }
 
     public void Postprocess(Driver driver, ASTContext ctx) { }
+
+    static void IgnorePrivateDecls(DeclarationContext unit)
+    {
+        foreach (var decl in unit.Declarations)
+        {
+            IgnorePrivateDecls(decl);
+        }
+    }
+
+    static void IgnorePrivateDecls(Declaration decl)
+    {
+        if (
+            decl.Name is not null
+            && (
+                decl.Name.StartsWith("Private", StringComparison.Ordinal)
+                || decl.Name.EndsWith("Private", StringComparison.Ordinal)
+            )
+        )
+        {
+            decl.ExplicitlyIgnore();
+        }
+        else
+        {
+            if (decl is DeclarationContext declContext)
+            {
+                IgnorePrivateDecls(declContext);
+            }
+        }
+    }
 }

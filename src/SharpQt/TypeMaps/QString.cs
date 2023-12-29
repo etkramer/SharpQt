@@ -21,28 +21,30 @@ class QString : TypeMap
     public override void CSharpMarshalToManaged(CSharpMarshalContext ctx)
     {
         ctx.Before.Write(
-            $"var size = QString.{Helpers.InternalStruct}.Size(new IntPtr(&{ctx.ReturnVarName}));"
+            $"var __size{ctx.ParameterIndex} = QString.{Helpers.InternalStruct}.Size(new IntPtr(&{ctx.ReturnVarName}));"
         );
         ctx.Before.Write(
-            $"var constData = QString.{Helpers.InternalStruct}.ConstData(new IntPtr(&{ctx.ReturnVarName}));"
+            $"var __constData{ctx.ParameterIndex} = QString.{Helpers.InternalStruct}.ConstData(new IntPtr(&{ctx.ReturnVarName}));"
         );
 
-        ctx.Return.Write("Marshal.PtrToStringUni(constData, size)");
+        ctx.Return.Write(
+            $"Marshal.PtrToStringUni(__constData{ctx.ParameterIndex}, __size{ctx.ParameterIndex})"
+        );
     }
 
     public override void CSharpMarshalToNative(CSharpMarshalContext ctx)
     {
-        ctx.Before.Write($"var data = Marshal.StringToHGlobalUni({ctx.Parameter.Name});");
-        ctx.Before.Write($"var res = new QString.{Helpers.InternalStruct}();");
-        ctx.Before.Write($"var size = {ctx.Parameter.Name}.Length;");
         ctx.Before.Write(
-            $"QString.{Helpers.InternalStruct}.FromUtf16(new IntPtr(&res), (ushort*)(data.ToPointer()), size);"
+            $"var _data{ctx.ParameterIndex} = Marshal.StringToHGlobalUni({ctx.Parameter.Name});"
+        );
+        ctx.Before.Write($"var _res{ctx.ParameterIndex} = new QString.{Helpers.InternalStruct}();");
+        ctx.Before.Write($"var _size{ctx.ParameterIndex} = {ctx.Parameter.Name}.Length;");
+        ctx.Before.Write(
+            $"QString.{Helpers.InternalStruct}.FromUtf16(new IntPtr(&_res{ctx.ParameterIndex}), (ushort*)(_data{ctx.ParameterIndex}.ToPointer()), _size{ctx.ParameterIndex});"
         );
 
-        ctx.Return.Write("new IntPtr(&res)");
+        ctx.Return.Write($"new IntPtr(&_res{ctx.ParameterIndex})");
 
-        ctx.Cleanup.WriteLine("Marshal.FreeHGlobal(data);");
+        ctx.Cleanup.WriteLine($"Marshal.FreeHGlobal(_data{ctx.ParameterIndex});");
     }
-
-    //public override string CSharpConstruct() => "";
 }
