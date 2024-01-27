@@ -1,6 +1,8 @@
-﻿using CppSharp;
+﻿using System.Reflection;
+using CppSharp;
 using CppSharp.AST;
 using CppSharp.Generators;
+using HarmonyLib;
 using SharpQt.Passes;
 
 namespace SharpQt;
@@ -9,6 +11,10 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
 {
     public void Setup(Driver driver)
     {
+        // Apply patches for CppSharp.
+        var harmony = new Harmony("com.sharpqt.patch");
+        harmony.PatchAll(Assembly.GetExecutingAssembly());
+
         driver.Options.GenerateDefaultValuesForArguments = true;
         driver.Options.GenerateDeprecatedDeclarations = false;
         driver.Options.CommentKind = CommentKind.BCPLSlash;
@@ -16,6 +22,9 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
         driver.Options.MarshalCharAsManagedChar = false;
         driver.Options.MarshalConstCharArrayAsString = false;
         driver.Options.OutputDir = OutPath;
+
+        // Use LayoutKind.Explicit to allow some members of __Internal structs to be skipped.
+        driver.Options.GenerateSequentialLayout = false;
 
 #if DEBUG
         driver.Options.GenerateDebugOutput = true;
@@ -48,17 +57,16 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
 
         module.Headers.Add(moduleName);
         module.Libraries.Add(libName);
-
-        //module.Headers.Add("qobject.h");
-        //module.Headers.Add("qcoreapplication.h");
     }
 
     public void SetupPasses(Driver driver)
     {
-        driver.Context.TranslationUnitPasses.AddPass(new UseWhitelistPass());
-        driver.Context.TranslationUnitPasses.AddPass(new RemapQStringMethodsPass());
-        driver.Context.TranslationUnitPasses.AddPass(new RemoveCharPass());
-        driver.Context.TranslationUnitPasses.AddPass(new RemoveQObjectMembersPass());
+        var passes = driver.Context.TranslationUnitPasses;
+
+        passes.AddPass(new UseWhitelistPass());
+        passes.AddPass(new RemapQStringMethodsPass());
+        passes.AddPass(new RemoveCharPass());
+        passes.AddPass(new RemoveQObjectMembersPass());
     }
 
     public void Preprocess(Driver driver, ASTContext ctx)

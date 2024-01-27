@@ -10,11 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Build\Qt.csproj"/>
+    <EmbeddedResource Include="Embed\Qt.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CppSharp" Version="1.1.5.3168" />
+    <PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.5" />
     <PackageReference Include="Spectre.Console" Version="0.48.0" />
   </ItemGroup>
 

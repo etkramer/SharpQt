@@ -1,5 +1,4 @@
 ﻿using CppSharp.AST;
-using CppSharp.AST.Extensions;
 using CppSharp.Extensions;
 using CppSharp.Passes;
 
@@ -8,10 +7,7 @@ namespace SharpQt.Passes;
 class UseWhitelistPass : TranslationUnitPass
 {
     // Note: if a whitelisted type inherits from another type, its parent also needs to be whitelisted. Could probably do this automatically in the future.
-    readonly HashSet<string> whitelist = ["QObject", "QCoreApplication", "QGuiApplication"];
-
-    // TODO: Mark these internal instead of including them in the API. We only need these because they're data members in another type's __Internal struct.
-    readonly HashSet<string> whitelistInternal = ["QScopedPointer", "QExplicitlySharedDataPointer"];
+    readonly HashSet<string> whitelist = ["QObject", "QCoreApplication", "QGuiApplication", "QWindow"];
 
     public override bool VisitClassDecl(Class decl)
     {
@@ -41,19 +37,13 @@ class UseWhitelistPass : TranslationUnitPass
             decl.ExplicitlyIgnore();
         }
 
-        // Ignore methods from internal whitelisted types.
-        if (decl.IsNativeMethod() && whitelistInternal.Contains(decl.Namespace.OriginalName))
-        {
-            decl.ExplicitlyIgnore();
-        }
-
         return base.VisitFunctionDecl(decl);
     }
 
     bool IsWhitelisted(Declaration decl)
     {
         // Check if decl is whitelisted
-        if (whitelist.Contains(decl.OriginalName) || whitelistInternal.Contains(decl.OriginalName))
+        if (whitelist.Contains(decl.OriginalName))
         {
             return true;
         }
