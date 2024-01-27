@@ -1,5 +1,4 @@
 ﻿using CppSharp.AST;
-using CppSharp.Generators;
 using CppSharp.Generators.CSharp;
 using CppSharp.Types;
 using Type = CppSharp.AST.Type;
