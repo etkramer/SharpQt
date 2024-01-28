@@ -6,7 +6,7 @@ namespace SharpQt.Patches;
 
 [HarmonyPatch(typeof(ConstructorToConversionOperatorPass))]
 [HarmonyPatch("VisitMethodDecl")]
-static class ConstructorToConversionOperatorPassPatches
+static class VisitMethodDeclPatch
 {
     static bool Prefix(
         ConstructorToConversionOperatorPass __instance,

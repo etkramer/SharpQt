@@ -67,6 +67,7 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
         passes.AddPass(new RemapQStringMethodsPass());
         passes.AddPass(new RemoveCharPass());
         passes.AddPass(new RemoveQObjectMembersPass());
+        passes.AddPass(new MarkTypedefsInternalPass());
     }
 
     public void Preprocess(Driver driver, ASTContext ctx)
