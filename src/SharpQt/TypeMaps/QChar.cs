@@ -3,6 +3,8 @@ using CppSharp.Generators.CSharp;
 using CppSharp.Types;
 using Type = CppSharp.AST.Type;
 
+// Based on https://github.com/ddobrev/QtSharp/blob/master/QtSharp/QFlags.cs
+
 namespace SharpQt.TypeMaps;
 
 [TypeMap("QChar")]
