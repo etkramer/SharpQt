@@ -2,6 +2,7 @@
 using CppSharp;
 using CppSharp.AST;
 using CppSharp.Generators;
+using CppSharp.Passes;
 using HarmonyLib;
 using SharpQt.Passes;
 
@@ -9,6 +10,9 @@ namespace SharpQt;
 
 public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNames) : ILibrary
 {
+    // Note: if a whitelisted type inherits from another type, its parent also needs to be whitelisted. Could probably do this automatically in the future.
+    static readonly HashSet<string> whitelist = ["QObject", "QCoreApplication", "QGuiApplication", "QWindow"];
+
     public void Setup(Driver driver)
     {
         // Apply patches for CppSharp.
@@ -63,11 +67,14 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
     {
         var passes = driver.Context.TranslationUnitPasses;
 
-        passes.AddPass(new UseWhitelistPass());
+        passes.AddPass(new UseWhitelistPass1());
+        passes.AddPass(new UseWhitelistPass2());
         passes.AddPass(new RemapQStringMethodsPass());
         passes.AddPass(new RemoveCharPass());
         passes.AddPass(new RemoveQObjectMembersPass());
         passes.AddPass(new MarkTypedefsInternalPass());
+
+        passes.AddPass(new CheckIgnoredDeclsPass());
     }
 
     public void Preprocess(Driver driver, ASTContext ctx)
@@ -107,5 +114,22 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
                 IgnorePrivateDecls(declContext);
             }
         }
+    }
+
+    public static bool IsDeclWhitelisted(Declaration decl)
+    {
+        // Check if decl is whitelisted
+        if (whitelist.Contains(decl.OriginalName))
+        {
+            return true;
+        }
+
+        // Recursively check if parent class (or namespace) is whitelisted
+        if (decl.OriginalNamespace != null && IsDeclWhitelisted(decl.OriginalNamespace))
+        {
+            return true;
+        }
+
+        return false;
     }
 }
