@@ -15,6 +15,16 @@ static class GenerateClassInternalsFieldsPatch
 }
 
 [HarmonyPatch(typeof(CSharpSources))]
+[HarmonyPatch("GetClassInternalHead")]
+static class GetClassInternalHeadPatch
+{
+    static void Postfix(ref string __result)
+    {
+        __result = __result.Replace("public", "internal");
+    }
+}
+
+[HarmonyPatch(typeof(CSharpSources))]
 [HarmonyPatch("GenerateClassSpecifier")]
 static class GenerateClassSpecifierPatch
 {
