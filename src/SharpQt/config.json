@@ -1,0 +1,15 @@
+﻿{
+  "QtCore": {
+    "classes": ["QObject", "QCoreApplication"],
+    "structs": ["QPoint"],
+    "enums": ["WindowType"]
+  },
+
+  "QtGui": {
+    "classes": ["QGuiApplication", "QWindow"]
+  },
+
+  "QtWidgets": {
+    "classes": ["QApplication", "QWidget"]
+  }
+}

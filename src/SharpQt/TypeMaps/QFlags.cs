@@ -41,7 +41,7 @@ public class QFlags : TypeMap
 
     public override bool IsIgnored =>
         GetEnumType(Type).TryGetDeclaration<Declaration>(out var decl)
-        && !Library.IsDeclWhitelisted(decl);
+        && !Library.Instance.IsDeclWhitelisted(decl);
 
     private static Type? GetEnumType(Type mappedType)
     {

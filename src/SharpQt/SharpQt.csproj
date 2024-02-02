@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="config.json" />
     <EmbeddedResource Include="Embed\Qt.csproj" />
   </ItemGroup>
 

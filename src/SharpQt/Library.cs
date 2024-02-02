@@ -9,13 +9,24 @@ using SharpQt.Passes;
 
 namespace SharpQt;
 
-public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNames) : ILibrary
+public class Library(
+    string QtPath,
+    string OutPath,
+    IEnumerable<string> ModuleNames,
+    IEnumerable<string> ClassNames,
+    IEnumerable<string> StructNames,
+    IEnumerable<string> EnumNames
+) : ILibrary
 {
     // Note: if a whitelisted type inherits from another type, its parent also needs to be whitelisted. Could probably do this automatically in the future.
-    static readonly HashSet<string> whitelist = ["QObject", "QCoreApplication", "QGuiApplication", "QWindow", "QPoint", "QApplication", "QWidget", "WindowType"];
+    IEnumerable<string> whitelist = ClassNames.Concat(StructNames).Concat(EnumNames);
+
+    public static Library Instance { get; private set; } = null!;
 
     public void Setup(Driver driver)
     {
+        Instance = this;
+
         // Apply patches for CppSharp.
         var harmony = new Harmony("com.sharpqt.patch");
         harmony.PatchAll(Assembly.GetExecutingAssembly());
@@ -79,9 +90,10 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
 
     public void Preprocess(Driver driver, ASTContext ctx)
     {
-        //ctx.SetClassAsValueType("QPoint");
-        //ctx.SetClassAsValueType("QSize");
-        //ctx.SetClassAsValueType("QRect");
+        foreach (var structName in StructNames)
+        {
+            ctx.SetClassAsValueType(structName);
+        }
 
         foreach (var unit in ctx.TranslationUnits.Where(u => u.IsValid))
         {
@@ -120,7 +132,7 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
         }
     }
 
-    public static bool IsDeclWhitelisted(Declaration decl)
+    public bool IsDeclWhitelisted(Declaration decl)
     {
         // Check if decl is whitelisted
         if (whitelist.Contains(decl.OriginalName))

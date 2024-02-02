@@ -2,6 +2,7 @@
 using System.Reflection;
 using CppSharp;
 using Spectre.Console;
+using System.Text.Json;
 
 namespace SharpQt;
 
@@ -40,7 +41,34 @@ static class Program
             // Run generator driver
             PrintLabel("Generate");
             {
-                ConsoleDriver.Run(new Library(qtDir, buildDir, ["QtCore", "QtGui", "QtWidgets"]));
+                using var resStream = Assembly
+                    .GetExecutingAssembly()
+                    .GetManifestResourceStream("SharpQt.config.json");
+
+                var jsonDocument = JsonDocument.Parse(resStream!);
+
+                var jsonModules = jsonDocument.RootElement.EnumerateObject();
+
+                List<string> classNames = [];
+                List<string> structNames = [];
+                List<string> enumNames = [];
+                foreach (var jsonModule in jsonModules)
+                {
+                    if (jsonModule.Value.TryGetProperty("classes", out var jsonClasses))
+                    {
+                        classNames.AddRange(jsonClasses.EnumerateArray().Select(o => o.GetString()!));
+                    }
+                    if (jsonModule.Value.TryGetProperty("structs", out var jsonStructs))
+                    {
+                        structNames.AddRange(jsonStructs.EnumerateArray().Select(o => o.GetString()!));
+                    }
+                    if (jsonModule.Value.TryGetProperty("enums", out var jsonEnums))
+                    {
+                        enumNames.AddRange(jsonEnums.EnumerateArray().Select(o => o.GetString()!));
+                    }
+                }
+
+                ConsoleDriver.Run(new Library(qtDir, buildDir, jsonModules.Select(o => o.Name), classNames, structNames, enumNames));
             }
 
             // Build C# project

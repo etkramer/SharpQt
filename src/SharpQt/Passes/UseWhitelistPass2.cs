@@ -7,7 +7,7 @@ class UseWhitelistPass2 : TranslationUnitPass
 {
     public override bool VisitClassDecl(Class decl)
     {
-        if (Library.IsDeclWhitelisted(decl))
+        if (Library.Instance.IsDeclWhitelisted(decl))
         {
             ExplicitlyUnignore(decl);
         }
@@ -17,7 +17,7 @@ class UseWhitelistPass2 : TranslationUnitPass
 
     public override bool VisitEnumDecl(Enumeration decl)
     {
-        if (Library.IsDeclWhitelisted(decl))
+        if (Library.Instance.IsDeclWhitelisted(decl))
         {
             ExplicitlyUnignore(decl);
         }
