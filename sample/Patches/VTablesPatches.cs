@@ -8,6 +8,7 @@ namespace SharpQt.Patches;
 [HarmonyPatch(typeof(VTables))]
 static class VTablesPatches
 {
+    // From https://github.com/mono/CppSharp/pull/1695
     [HarmonyPrefix]
     [HarmonyPatch("CloneTable")]
     static unsafe bool CloneTablePrefix(
