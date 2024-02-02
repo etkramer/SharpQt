@@ -34,11 +34,14 @@ public class Library(
         driver.Options.GenerateDefaultValuesForArguments = true;
         driver.Options.GenerateDeprecatedDeclarations = false;
         driver.Options.GenerateSequentialLayout = false;
-        driver.Options.GenerateFinalizers = false;
         driver.Options.GeneratorKind = GeneratorKind.CSharp;
         driver.Options.MarshalCharAsManagedChar = true;
         driver.Options.MarshalConstCharArrayAsString = false;
         driver.Options.OutputDir = OutPath;
+
+        // Only generate finalizers for types that don't use the QObject ownership model
+        driver.Options.GenerateFinalizers = true;
+        driver.Options.GenerateFinalizersFilter = (decl) => !IsDerivedFromQObject(decl);
 
 #if DEBUG
         driver.Options.GenerateDebugOutput = true;
@@ -59,6 +62,18 @@ public class Library(
             var namespaceName = shortName == "Core" ? "Qt" : $"Qt.{shortName}";
 
             AddModule(driver, moduleName, libName, namespaceName);
+        }
+    }
+
+    bool IsDerivedFromQObject(Class decl)
+    {
+        if (decl.Name == "QObject")
+        {
+            return true;
+        }
+        else
+        {
+            return decl.BaseClass != null && IsDerivedFromQObject(decl.BaseClass);
         }
     }
 
@@ -84,6 +99,7 @@ public class Library(
         passes.AddPass(new RemoveCharPass());
         passes.AddPass(new RemoveQObjectMembersPass());
         passes.AddPass(new MarkTypedefsInternalPass());
+        passes.AddPass(new MoveGlobalNamespacePass());
 
         passes.AddPass(new CheckIgnoredDeclsPass());
     }
