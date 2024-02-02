@@ -37,4 +37,15 @@ class UseWhitelistPass1 : TranslationUnitPass
 
         return base.VisitFunctionDecl(decl);
     }
+
+    public override bool VisitDeclaration(Declaration decl)
+    {
+        // Ignore *anything* that's not a class or namespace but exists in the global namespace
+        if (decl is not Class && decl is not Namespace && decl.Namespace is TranslationUnit)
+        {
+            decl.ExplicitlyIgnore();
+        }
+
+        return base.VisitDeclaration(decl);
+    }
 }
