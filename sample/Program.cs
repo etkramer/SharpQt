@@ -20,6 +20,7 @@ unsafe
         WindowTitle = "Some title",
         StyleSheet = "QWidget { background-color: black; }"
     };
+
     win.Resize(1280, 720);
     win.Show();
 
