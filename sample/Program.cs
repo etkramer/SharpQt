@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Qt;
 using Qt.Widgets;
 using HarmonyLib;
 
@@ -11,20 +10,16 @@ Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
 var harmony = new Harmony("com.sharpqt.sample.patch");
 harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-var obj = new QObject(null);
-obj.ObjectName = "Hello object\0 123!";
-
-Console.WriteLine(obj.IsWidgetType);
-Console.WriteLine(obj.ObjectName);
-
 unsafe
 {
     int argc = 0;
-    var app = new QApplication(ref argc, null);
+    _ = new QApplication(ref argc, null);
 
-    var win = new QWidget(null);
-    win.WindowTitle = "Some title";
-    win.StyleSheet = "QWidget { background-color: black; }";
+    var win = new QWidget(null)
+    {
+        WindowTitle = "Some title",
+        StyleSheet = "QWidget { background-color: black; }"
+    };
     win.Resize(1280, 720);
     win.Show();
 
