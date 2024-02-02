@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="config.json" />
+    <Content Include="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Embed\Qt.csproj" />
   </ItemGroup>
 

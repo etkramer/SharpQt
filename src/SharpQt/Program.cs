@@ -41,12 +41,9 @@ static class Program
             // Run generator driver
             PrintLabel("Generate");
             {
-                using var resStream = Assembly
-                    .GetExecutingAssembly()
-                    .GetManifestResourceStream("SharpQt.config.json");
-
-                var jsonDocument = JsonDocument.Parse(resStream!);
-
+                var configPath = Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location)!.FullName, "config.json");
+                using var configFile = File.OpenRead(configPath);
+                var jsonDocument = JsonDocument.Parse(configFile);
                 var jsonModules = jsonDocument.RootElement.EnumerateObject();
 
                 List<string> classNames = [];
