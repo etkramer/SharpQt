@@ -43,7 +43,7 @@ static class Program
             {
                 var configPath = Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location)!.FullName, "config.json");
                 using var configFile = File.OpenRead(configPath);
-                var jsonDocument = JsonDocument.Parse(configFile);
+                var jsonDocument = JsonDocument.Parse(configFile, new() { CommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true });
                 var jsonModules = jsonDocument.RootElement.EnumerateObject();
 
                 List<string> classNames = [];
