@@ -20,6 +20,13 @@ class UseWhitelistPass1 : TranslationUnitPass
         return base.VisitEnumDecl(decl);
     }
 
+    public override bool VisitFieldDecl(Field field)
+    {
+        field.ExplicitlyIgnore();
+
+        return base.VisitFieldDecl(field);
+    }
+
     public override bool VisitFunctionDecl(Function decl)
     {
         // Ignore all free functions

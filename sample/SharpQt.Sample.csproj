@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +17,7 @@
     
   <ItemGroup>
     <PackageReference Include="CppSharp.Runtime" Version="1.1.5.3168" />
+    <PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.5" />
   </ItemGroup>
 
 </Project>

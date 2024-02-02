@@ -40,7 +40,7 @@ static class Program
             // Run generator driver
             PrintLabel("Generate");
             {
-                ConsoleDriver.Run(new Library(qtDir, buildDir, ["QtCore", "QtGui"]));
+                ConsoleDriver.Run(new Library(qtDir, buildDir, ["QtCore", "QtGui", "QtWidgets"]));
             }
 
             // Build C# project

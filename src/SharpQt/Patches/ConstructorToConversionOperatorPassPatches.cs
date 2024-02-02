@@ -5,10 +5,11 @@ using HarmonyLib;
 namespace SharpQt.Patches;
 
 [HarmonyPatch(typeof(ConstructorToConversionOperatorPass))]
-[HarmonyPatch("VisitMethodDecl")]
-static class VisitMethodDeclPatch
+static class ConstructorToConversionOperatorPassPatches
 {
-    static bool Prefix(
+    [HarmonyPrefix]
+    [HarmonyPatch("VisitMethodDecl")]
+    static bool VisitMethodDeclPrefix(
         ConstructorToConversionOperatorPass __instance,
         Method method,
         ref bool __result

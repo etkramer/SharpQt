@@ -3,6 +3,7 @@ using CppSharp;
 using CppSharp.AST;
 using CppSharp.Generators;
 using CppSharp.Passes;
+using CppSharp.Parser;
 using HarmonyLib;
 using SharpQt.Passes;
 
@@ -11,7 +12,7 @@ namespace SharpQt;
 public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNames) : ILibrary
 {
     // Note: if a whitelisted type inherits from another type, its parent also needs to be whitelisted. Could probably do this automatically in the future.
-    static readonly HashSet<string> whitelist = ["QObject", "QCoreApplication", "QGuiApplication", "QWindow"];
+    static readonly HashSet<string> whitelist = ["QObject", "QCoreApplication", "QGuiApplication", "QWindow", "QPoint", "QApplication", "QWidget", "WindowType"];
 
     public void Setup(Driver driver)
     {
@@ -21,20 +22,19 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
 
         driver.Options.GenerateDefaultValuesForArguments = true;
         driver.Options.GenerateDeprecatedDeclarations = false;
-        driver.Options.CommentKind = CommentKind.BCPLSlash;
+        driver.Options.GenerateSequentialLayout = false;
+        driver.Options.GenerateFinalizers = false;
         driver.Options.GeneratorKind = GeneratorKind.CSharp;
-        driver.Options.MarshalCharAsManagedChar = false;
+        driver.Options.MarshalCharAsManagedChar = true;
         driver.Options.MarshalConstCharArrayAsString = false;
         driver.Options.OutputDir = OutPath;
-
-        // Use LayoutKind.Explicit to allow some members of __Internal structs to be skipped.
-        driver.Options.GenerateSequentialLayout = false;
 
 #if DEBUG
         driver.Options.GenerateDebugOutput = true;
 #endif
 
         driver.ParserOptions.EnableRTTI = true;
+        driver.ParserOptions.LanguageVersion = LanguageVersion.CPP14_GNU;
         driver.ParserOptions.SetupMSVC(VisualStudioVersion.VS2022);
         driver.ParserOptions.Setup(TargetPlatform.Windows);
 
@@ -79,6 +79,10 @@ public class Library(string QtPath, string OutPath, IEnumerable<string> ModuleNa
 
     public void Preprocess(Driver driver, ASTContext ctx)
     {
+        //ctx.SetClassAsValueType("QPoint");
+        //ctx.SetClassAsValueType("QSize");
+        //ctx.SetClassAsValueType("QRect");
+
         foreach (var unit in ctx.TranslationUnits.Where(u => u.IsValid))
         {
             IgnorePrivateDecls(unit);

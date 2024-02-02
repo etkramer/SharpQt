@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SharpQt.Sample": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
