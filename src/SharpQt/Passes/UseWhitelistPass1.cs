@@ -1,5 +1,7 @@
 ﻿using CppSharp.AST;
+using CppSharp.AST.Extensions;
 using CppSharp.Extensions;
+using CppSharp.Generators;
 using CppSharp.Passes;
 
 namespace SharpQt.Passes;
@@ -31,6 +33,12 @@ class UseWhitelistPass1 : TranslationUnitPass
     {
         // Ignore all free functions
         if (!decl.IsNativeMethod())
+        {
+            decl.ExplicitlyIgnore();
+        }
+
+        // Ignore any function returning an unsafe pointer
+        if (decl.ReturnType.Type.GetMappedType(Context.TypeMaps, GeneratorKind.CSharp).IsPointer())
         {
             decl.ExplicitlyIgnore();
         }

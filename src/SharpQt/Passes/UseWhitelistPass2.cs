@@ -25,6 +25,16 @@ class UseWhitelistPass2 : TranslationUnitPass
         return base.VisitEnumDecl(decl);
     }
 
+    public override bool VisitTypedefNameDecl(TypedefNameDecl decl)
+    {
+        if (Library.Instance.IsDeclWhitelisted(decl))
+        {
+            ExplicitlyUnignore(decl);
+        }
+
+        return base.VisitTypedefNameDecl(decl);
+    }
+
     void ExplicitlyUnignore(Declaration decl)
     {
         decl.GenerationKind = GenerationKind.Generate;

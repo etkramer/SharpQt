@@ -35,7 +35,7 @@ public class Library(
         driver.Options.GenerateDeprecatedDeclarations = false;
         driver.Options.GenerateSequentialLayout = false;
         driver.Options.GeneratorKind = GeneratorKind.CSharp;
-        driver.Options.MarshalCharAsManagedChar = true;
+        driver.Options.MarshalCharAsManagedChar = false;
         driver.Options.MarshalConstCharArrayAsString = false;
         driver.Options.OutputDir = OutPath;
 
@@ -65,7 +65,7 @@ public class Library(
         }
     }
 
-    bool IsDerivedFromQObject(Class decl)
+    static bool IsDerivedFromQObject(Class decl)
     {
         if (decl.Name == "QObject")
         {
@@ -96,9 +96,7 @@ public class Library(
         passes.AddPass(new UseWhitelistPass1());
         passes.AddPass(new UseWhitelistPass2());
         passes.AddPass(new RemapQStringMethodsPass());
-        passes.AddPass(new RemoveCharPass());
         passes.AddPass(new RemoveQObjectMembersPass());
-        passes.AddPass(new MarkTypedefsInternalPass());
         passes.AddPass(new MoveGlobalNamespacePass());
 
         passes.AddPass(new CheckIgnoredDeclsPass());
@@ -106,6 +104,9 @@ public class Library(
 
     public void Preprocess(Driver driver, ASTContext ctx)
     {
+        var typemaps = driver.Context.TypeMaps.TypeMaps;
+        typemaps.Remove("basic_string<char, char_traits<char>, allocator<char>>");
+
         foreach (var structName in StructNames)
         {
             ctx.SetClassAsValueType(structName);
