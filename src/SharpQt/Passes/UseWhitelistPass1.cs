@@ -37,8 +37,12 @@ class UseWhitelistPass1 : TranslationUnitPass
             decl.ExplicitlyIgnore();
         }
 
-        // Ignore any function returning an unsafe pointer
-        if (decl.ReturnType.Type.GetMappedType(Context.TypeMaps, GeneratorKind.CSharp).IsPointer())
+        // Ignore any function returning an unsafe pointer to a primitive type
+        if (
+            decl.ReturnType.Type
+                .GetMappedType(Context.TypeMaps, GeneratorKind.CSharp)
+                .IsPointerToPrimitiveType()
+        )
         {
             decl.ExplicitlyIgnore();
         }
