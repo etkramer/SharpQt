@@ -1,6 +1,6 @@
 ﻿{
   "QtCore": {
-    "classes": ["QObject", "QCoreApplication", "QFunctionPointer"],
+    "classes": ["QObject", "QCoreApplication"],
     "structs": ["QPoint"],
     "enums": ["WindowType"]
   },
