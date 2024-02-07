@@ -98,6 +98,7 @@ public class Library(
         passes.AddPass(new RemapQStringMethodsPass());
         passes.AddPass(new RemoveQObjectMembersPass());
         passes.AddPass(new MoveGlobalNamespacePass());
+        passes.AddPass(new RenameEventsPass());
         passes.AddPass(new GenerateSignalEventsPass(driver.Generator));
 
         passes.AddPass(new CheckIgnoredDeclsPass());
