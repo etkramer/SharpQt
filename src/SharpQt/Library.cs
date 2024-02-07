@@ -166,6 +166,17 @@ public class Library(
             return true;
         }
 
+        // These types are required to generate compilable bindings
+        if (
+            decl.OriginalName == "QObject"
+            || decl.OriginalName == "QMetaObject"
+            || decl.OriginalName == "QMetaMethod"
+            || decl.OriginalName == "QMetaType"
+        )
+        {
+            return true;
+        }
+
         // Recursively check if parent class (or namespace) is whitelisted
         if (decl.OriginalNamespace != null && IsDeclWhitelisted(decl.OriginalNamespace))
         {
