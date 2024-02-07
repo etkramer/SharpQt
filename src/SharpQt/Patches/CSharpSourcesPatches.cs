@@ -25,6 +25,15 @@ static class CSharpSourcesPatches
         __result = __result.Replace("public", "internal");
     }
 
+    // Semi-arbitrary hook for extending class generation
+    [HarmonyPrefix]
+    [HarmonyPatch("GenerateClassConstructors")]
+    static bool GenerateClassConstructorsPrefix(CSharpSources __instance, Class @class)
+    {
+        Library.Instance.OnWriteClassContents(@class, __instance);
+        return true;
+    }
+
     // From https://github.com/mono/CppSharp/blob/9071cd2a591d5dcb5c584d2774f60905db12ce56/src/Generator/Generators/CSharp/CSharpSources.cs#L750. We could also do this with a transpiler patch.
     [HarmonyPrefix]
     [HarmonyPatch("GenerateClassSpecifier")]

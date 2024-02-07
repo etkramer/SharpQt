@@ -15,12 +15,12 @@ unsafe
     int argc = 0;
     _ = new QApplication(ref argc, null);
 
-    var win = new QWidget(null)
-    {
-        WindowTitle = "Some title",
-        StyleSheet = "QWidget { background-color: black; }"
-    };
+    var win = new QPushButton(null) { Text = "Click me" };
 
+    win.Clicked += o => Console.WriteLine($"Button clicked (\"checked\" was {o})");
+    win.WindowTitleChanged += o => Console.WriteLine($"Title changed to \"{o}\"");
+
+    win.WindowTitle = "Some title";
     win.Resize(1280, 720);
     win.Show();
 

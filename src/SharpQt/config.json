@@ -1,6 +1,6 @@
 ﻿{
   "QtCore": {
-    "classes": ["QObject", "QCoreApplication", "QFunctionPointer", "QMetaObject"],
+    "classes": ["QObject", "QCoreApplication", "QFunctionPointer", "QMetaObject", "QMetaMethod", "QMetaType"],
     "structs": ["QPoint"],
     "enums": ["WindowType"]
   },
@@ -10,6 +10,6 @@
   },
 
   "QtWidgets": {
-    "classes": ["QApplication", "QWidget"]
+    "classes": ["QApplication", "QWidget", "QAbstractButton", "QPushButton"]
   }
 }
