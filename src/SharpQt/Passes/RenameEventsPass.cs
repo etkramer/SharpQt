@@ -10,13 +10,13 @@ public class RenameEventsPass : TranslationUnitPass
     {
         if (
             !method.IsConstructor
-            && (method.OriginalName.EndsWith("Event", StringComparison.Ordinal))
+            && method.OriginalName.EndsWith("Event")
             && method.Parameters.Count == 1
         )
         {
             method.Name =
                 "On"
-                + char.ToUpperInvariant(method.OriginalName[0])
+                + char.ToUpper(method.OriginalName[0])
                 + method.OriginalName[1..method.OriginalName.LastIndexOf("Event")];
 
             method.Parameters[0].Name = "args";

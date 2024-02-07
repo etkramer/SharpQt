@@ -6,6 +6,7 @@ using CppSharp.Passes;
 using CppSharp.Parser;
 using HarmonyLib;
 using SharpQt.Passes;
+using System.Globalization;
 
 namespace SharpQt;
 
@@ -30,6 +31,10 @@ public class Library(
         // Apply patches for CppSharp.
         var harmony = new Harmony("com.sharpqt.patch");
         harmony.PatchAll(Assembly.GetExecutingAssembly());
+
+        // Use invariant culture for string comparisons
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
         driver.Options.GenerateDefaultValuesForArguments = true;
         driver.Options.GenerateDeprecatedDeclarations = false;
