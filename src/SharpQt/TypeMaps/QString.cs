@@ -21,10 +21,8 @@ class QString : TypeMap
     public override void CSharpMarshalToManaged(CSharpMarshalContext ctx)
     {
         ctx.Before.Write(
-            $"var __size{ctx.ParameterIndex} = QString.{Helpers.InternalStruct}.Size(new IntPtr(&{ctx.ReturnVarName}));"
-        );
-        ctx.Before.Write(
-            $"var __constData{ctx.ParameterIndex} = QString.{Helpers.InternalStruct}.ConstData(new IntPtr(&{ctx.ReturnVarName}));"
+            $@"var __size{ctx.ParameterIndex} = QString.{Helpers.InternalStruct}.Size(new IntPtr(&{ctx.ReturnVarName}));
+            var __constData{ctx.ParameterIndex} = QString.{Helpers.InternalStruct}.ConstData(new IntPtr(&{ctx.ReturnVarName}));"
         );
 
         ctx.Return.Write(
@@ -35,16 +33,13 @@ class QString : TypeMap
     public override void CSharpMarshalToNative(CSharpMarshalContext ctx)
     {
         ctx.Before.Write(
-            $"var _data{ctx.ParameterIndex} = Marshal.StringToHGlobalUni({ctx.Parameter.Name});"
-        );
-        ctx.Before.Write($"var _res{ctx.ParameterIndex} = new QString.{Helpers.InternalStruct}();");
-        ctx.Before.Write($"var _size{ctx.ParameterIndex} = {ctx.Parameter.Name}.Length;");
-        ctx.Before.Write(
-            $"QString.{Helpers.InternalStruct}.FromUtf16(new IntPtr(&_res{ctx.ParameterIndex}), (ushort*)(_data{ctx.ParameterIndex}.ToPointer()), _size{ctx.ParameterIndex});"
+            $@"var _data{ctx.ParameterIndex} = Marshal.StringToHGlobalUni({ctx.Parameter.Name});
+            var _size{ctx.ParameterIndex} = {ctx.Parameter.Name}.Length;
+            var _res{ctx.ParameterIndex} = new QString.{Helpers.InternalStruct}();
+            QString.{Helpers.InternalStruct}.FromUtf16(new IntPtr(&_res{ctx.ParameterIndex}), (ushort*)(_data{ctx.ParameterIndex}.ToPointer()), _size{ctx.ParameterIndex});"
         );
 
         ctx.Return.Write($"new IntPtr(&_res{ctx.ParameterIndex})");
-
         ctx.Cleanup.WriteLine($"Marshal.FreeHGlobal(_data{ctx.ParameterIndex});");
     }
 }
