@@ -47,6 +47,13 @@ class RemapQStringMethodsPass : TranslationUnitPass
                 {
                     method.GenerationKind = GenerationKind.Generate;
                     method.Access = AccessSpecifier.Internal;
+
+                    if (method.OriginalName == "fromRawData")
+                    {
+                        method.Parameters[0].QualifiedType = new QualifiedType(
+                            new PointerType(new QualifiedType(new BuiltinType(PrimitiveType.Void)))
+                        );
+                    }
                 }
                 else
                 {

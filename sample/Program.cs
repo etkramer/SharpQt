@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Qt.Widgets;
+using Qt.Gui;
 using HarmonyLib;
 
 // It is unfortunate but we have to set it to Unknown first.
@@ -15,7 +16,7 @@ unsafe
     int argc = 0;
     _ = new QApplication(ref argc, null);
 
-    var win = new QPushButton(null) { Text = "Click me" };
+    var win = new CustomButton() { Text = "Click me" };
 
     win.Clicked += o => Console.WriteLine($"Button clicked (\"checked\" was {o})");
     win.WindowTitleChanged += o => Console.WriteLine($"Title changed to \"{o}\"");
@@ -25,4 +26,13 @@ unsafe
     win.Show();
 
     QApplication.Exec();
+}
+
+class CustomButton : QPushButton
+{
+    protected override void OnPaint(QPaintEvent args)
+    {
+        Console.WriteLine("Painted");
+        base.OnPaint(args);
+    }
 }
