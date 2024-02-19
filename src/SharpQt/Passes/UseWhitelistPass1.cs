@@ -29,6 +29,13 @@ class UseWhitelistPass1 : TranslationUnitPass
         return base.VisitFieldDecl(field);
     }
 
+    public override bool VisitVariableDecl(Variable variable)
+    {
+        variable.ExplicitlyIgnore();
+
+        return base.VisitVariableDecl(variable);
+    }
+
     public override bool VisitFunctionDecl(Function decl)
     {
         // Ignore all free functions
