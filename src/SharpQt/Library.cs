@@ -96,17 +96,17 @@ public class Library(
 
     public void SetupPasses(Driver driver)
     {
-        var passes = driver.Context.TranslationUnitPasses;
+        driver.AddTranslationUnitPass(new UseWhitelistPass1());
+        driver.AddTranslationUnitPass(new UseWhitelistPass2());
+        driver.AddTranslationUnitPass(new RemapQStringMethodsPass());
+        driver.AddTranslationUnitPass(new RemoveQObjectMembersPass());
+        driver.AddTranslationUnitPass(new MoveGlobalNamespacePass());
+        driver.AddTranslationUnitPass(new RenameEventsPass());
+        driver.AddTranslationUnitPass(new GenerateSignalEventsPass(driver.Generator));
 
-        passes.AddPass(new UseWhitelistPass1());
-        passes.AddPass(new UseWhitelistPass2());
-        passes.AddPass(new RemapQStringMethodsPass());
-        passes.AddPass(new RemoveQObjectMembersPass());
-        passes.AddPass(new MoveGlobalNamespacePass());
-        passes.AddPass(new RenameEventsPass());
-        passes.AddPass(new GenerateSignalEventsPass(driver.Generator));
+        driver.AddTranslationUnitPass(new CheckIgnoredDeclsPass());
 
-        passes.AddPass(new CheckIgnoredDeclsPass());
+        driver.AddGeneratorOutputPass(new HideInstanceFieldPass());
     }
 
     public void Preprocess(Driver driver, ASTContext ctx)
