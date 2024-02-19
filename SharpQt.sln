@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpQt", "src\SharpQt\Shar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpQt.Sample", "sample\SharpQt.Sample.csproj", "{B8E535A5-2B44-4626-AB5C-5958ED5A4713}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CppSharp", "CppSharp", "{9DED64E1-2945-4483-9CC6-96F7F1CECF87}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CppSharp.Runtime", "src\Runtime\CppSharp.Runtime.csproj", "{2A9C2928-146F-4F10-A123-E899D860AF53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,9 +35,20 @@ Global
 		{B8E535A5-2B44-4626-AB5C-5958ED5A4713}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B8E535A5-2B44-4626-AB5C-5958ED5A4713}.Release|x64.ActiveCfg = Release|Any CPU
 		{B8E535A5-2B44-4626-AB5C-5958ED5A4713}.Release|x64.Build.0 = Release|Any CPU
+		{2A9C2928-146F-4F10-A123-E899D860AF53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A9C2928-146F-4F10-A123-E899D860AF53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A9C2928-146F-4F10-A123-E899D860AF53}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2A9C2928-146F-4F10-A123-E899D860AF53}.Debug|x64.Build.0 = Debug|Any CPU
+		{2A9C2928-146F-4F10-A123-E899D860AF53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A9C2928-146F-4F10-A123-E899D860AF53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A9C2928-146F-4F10-A123-E899D860AF53}.Release|x64.ActiveCfg = Release|Any CPU
+		{2A9C2928-146F-4F10-A123-E899D860AF53}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2A9C2928-146F-4F10-A123-E899D860AF53} = {9DED64E1-2945-4483-9CC6-96F7F1CECF87}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A8EE2DB0-5D18-4B2D-A1AC-E6DB4EF70028}

@@ -1,15 +1,9 @@
-﻿using System.Reflection;
-using Qt.Widgets;
+﻿using Qt.Widgets;
 using Qt.Gui;
-using HarmonyLib;
 
 // It is unfortunate but we have to set it to Unknown first.
 Thread.CurrentThread.SetApartmentState(ApartmentState.Unknown);
 Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
-
-// Needed for now, should fork CppSharp.Runtime instead
-var harmony = new Harmony("com.sharpqt.sample.patch");
-harmony.PatchAll(Assembly.GetExecutingAssembly());
 
 unsafe
 {
