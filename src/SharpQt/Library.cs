@@ -72,14 +72,8 @@ public class Library(
 
     static bool IsDerivedFromQObject(Class decl)
     {
-        if (decl.Name == "QObject")
-        {
-            return true;
-        }
-        else
-        {
-            return decl.BaseClass != null && IsDerivedFromQObject(decl.BaseClass);
-        }
+        return decl.Name == "QObject"
+            || (decl.BaseClass != null && IsDerivedFromQObject(decl.BaseClass));
     }
 
     void AddModule(Driver driver, string moduleName, string libName, string namespaceName)
