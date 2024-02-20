@@ -100,7 +100,8 @@ public class Library(
 
         driver.AddTranslationUnitPass(new CheckIgnoredDeclsPass());
 
-        driver.AddGeneratorOutputPass(new HideInstanceFieldPass());
+        // Disabled for now so __Instance can exist in interfaces
+        //driver.AddGeneratorOutputPass(new HideInstanceFieldPass());
     }
 
     public void Preprocess(Driver driver, ASTContext ctx)

@@ -12,8 +12,8 @@ unsafe
 
     var win = new CustomButton() { Text = "Click me" };
 
-    win.Clicked += o => Console.WriteLine($"Button clicked (\"checked\" was {o})");
-    win.WindowTitleChanged += o => Console.WriteLine($"Title changed to \"{o}\"");
+    win.Clicked += (o) => Console.WriteLine($"Button clicked (\"checked\" was {o})");
+    win.WindowTitleChanged += (o) => Console.WriteLine($"Title changed to \"{o}\"");
 
     win.WindowTitle = "Some title";
     win.Resize(1280, 720);
@@ -26,7 +26,7 @@ class CustomButton : QPushButton
 {
     protected override void OnPaint(QPaintEvent args)
     {
-        Console.WriteLine("Painted");
+        //Console.WriteLine("Painted");
         base.OnPaint(args);
     }
 }

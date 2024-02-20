@@ -6,7 +6,7 @@
   },
 
   "QtGui": {
-    "classes": ["QGuiApplication", "QWindow", "QPaintEvent"]
+    "classes": ["QGuiApplication", "QWindow", "QPaintEvent", "QPaintDevice"]
   },
 
   "QtWidgets": {
